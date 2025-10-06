@@ -21,9 +21,11 @@ $user_data = authenticateAPI();
 $database = new Database();
 $db = $database->connect();
 
-if (!$db) {
+try {
+    $db = Database::getConnection();
+} catch (\Exception $e) {
     http_response_code(500);
-    echo json_encode(['message' => 'Error en la conexión a la base de datos.']);
+    echo json_encode(['message' => 'Error interno del servidor: ' . $e->getMessage()]);
     exit();
 }
 
@@ -194,4 +196,5 @@ try {
     error_log('Productos API Error: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(['message' => 'Ocurrió un error en el servidor al procesar la solicitud de productos.']);
+
 }
