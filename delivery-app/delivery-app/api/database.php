@@ -56,7 +56,41 @@ class Database {
         }
 
         return $this->conn;
+
+    /**
+     * Obtiene la conexión a la base de datos.
+     * Si ya existe una conexión, la devuelve. Si no, la crea.
+     * @return PDO La instancia de la conexión PDO.
+     */
+    public static function getConnection(): PDO {
+        // Si la conexión ya está establecida, la retornamos.
+        if (self::$conn) {
+            return self::$conn;
+        }
+
+        // DSN (Data Source Name) - La cadena de conexión para PDO
+        $dsn = "mysql:host=" . self::$host . ";dbname=" . self::$db_name . ";charset=" . self::$charset;
+
+        // Opciones de PDO para un manejo de errores robusto
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ];
+
+        try {
+            // Intentamos crear la instancia de PDO
+            self::$conn = new PDO($dsn, self::$username, self::$password, $options);
+            return self::$conn;
+        } catch (PDOException $e) {
+            error_log('Connection Error: ' . $e->getMessage());
+            // En caso de fallo de conexión, se lanza una excepción que debe ser manejada
+            throw new \Exception('Error interno del servidor: Fallo en la conexión a la base de datos.');
+        }
+    }
+} // Fin de la clase Database
     }
 }
 
 ?>
+
