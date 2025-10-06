@@ -1,4 +1,3 @@
-<?php
 // api/database.php
 
 /**
@@ -9,22 +8,26 @@
  */
 class Database {
 
-    // Propiedades de la conexión leídas desde config.php
-    private $host = DB_HOST;
-    private $db_name = DB_NAME;
-    private $username = DB_USER;
-    private $password = DB_PASS;
-    private $charset = DB_CHARSET;
+    // Propiedades de la conexión estáticas para el Singleton.
+    private static $host = DB_HOST;
+    private static $db_name = DB_NAME;
+    private static $username = DB_USER;
+    private static $password = DB_PASS;
+    private static $charset = DB_CHARSET;
 
-    // La conexión PDO
-    private $conn;
+    // La conexión PDO estática
+    private static $conn;
 
-    /**
-     * Obtiene la conexión a la base de datos.
-     * Si ya existe una conexión, la devuelve. Si no, la crea.
-     * @return PDO|null La instancia de la conexión PDO o null si falla.
-     */
-    public function connect() {
+    // Constructor privado para evitar la instanciación externa (Singleton)
+    private function __construct() {
+        // Nada que hacer aquí.
+    }
+
+    // Métodos mágicos privados para evitar clonación y deserialización (Singleton)
+    private function __clone() {}
+    public function __wakeup() {
+        throw new \Exception("Cannot deserialize a singleton");
+    }    public function connect() {
         // Si la conexión ya está establecida, la retornamos para no crear una nueva.
         if ($this->conn) {
             return $this->conn;
@@ -55,4 +58,5 @@ class Database {
         return $this->conn;
     }
 }
+
 ?>
