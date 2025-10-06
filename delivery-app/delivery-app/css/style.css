@@ -1,0 +1,21 @@
+/* css/style.css */
+
+/* Aplicamos la fuente 'Inter' a todo el cuerpo de la página para una legibilidad excelente. */
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Aplicamos la fuente 'Poppins' a todos los títulos para darles más peso y un estilo moderno. */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Pequeño ajuste para los enlaces activos en la navegación.
+   Esto es un buen ejemplo de cómo el CSS personalizado puede complementar un framework. */
+.nav-link.active {
+    background-color: #0891b2; /* Un tono de cyan */
+    font-weight: 600;
+    color: white;
+}
