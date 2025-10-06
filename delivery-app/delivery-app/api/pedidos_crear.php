@@ -35,9 +35,11 @@ $user_data = authenticateAPI();
 $database = new Database();
 $db = $database->connect();
 
-if (!$db) {
+try {
+    $db = Database::getConnection();
+} catch (\Exception $e) {
     http_response_code(500);
-    echo json_encode(['message' => 'Error en la conexión a la base de datos.']);
+    echo json_encode(['message' => 'Error interno del servidor: ' . $e->getMessage()]);
     exit();
 }
 
@@ -157,4 +159,5 @@ try {
     error_log('Pedidos Crear Error: ' . $e->getMessage()); // Registrar el error completo
     http_response_code(500); // Internal Server Error
     echo json_encode(['message' => 'No se pudo crear el pedido.', 'error' => $e->getMessage()]);
+
 }
