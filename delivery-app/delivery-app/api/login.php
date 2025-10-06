@@ -30,12 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $data = json_decode(file_get_contents("php://input"));
 
 // Validar que los datos existan
-if (empty($data->username) || empty($data->password)) {
-    http_response_code(400);
-    echo json_encode(['message' => 'Usuario y contraseña son requeridos.']);
+try {
+    $db = Database::getConnection();
+} catch (\Exception $e) {
+    http_response_code(500);
+    echo json_encode(['message' => 'Error interno del servidor: ' . $e->getMessage()]);
     exit();
 }
-
 // Limpiar y validar datos
 $username = htmlspecialchars(strip_tags($data->username));
 $password = $data->password; // La contraseña se verifica con password_verify, no necesita sanitización
@@ -100,4 +101,5 @@ try {
     error_log('Login PDO Error: ' . $e->getMessage());
     http_response_code(500); // 500 Internal Server Error
     echo json_encode(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.']);
+
 }
