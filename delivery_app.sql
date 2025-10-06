@@ -136,6 +136,10 @@ CREATE TABLE `repartidores` (
   `estado` enum('disponible','ocupado','inactivo') NOT NULL DEFAULT 'disponible'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Personal de entregas.';
 
+ALTER TABLE repartidores
+ADD COLUMN ultima_actividad TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+COMMENT 'Registro de la última vez que el repartidor actualizó su estado (disponible/ocupado).';
+
 --
 -- Volcado de datos para la tabla `repartidores`
 --
