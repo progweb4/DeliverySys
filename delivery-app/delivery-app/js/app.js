@@ -31,6 +31,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000); // Ocultar después de 5 segundos
     }
 
+// --- FUNCIÓN PARA CAMBIAR ESTADO DE REPARTIDOR ---
+/**
+ * Cambia el estado (disponible/ocupado) de un repartidor a través de la API.
+ * @param {number} id - El ID del repartidor.
+ * @param {string} newStatus - El nuevo estado ('disponible' o 'ocupado').
+ */
+async function toggleRepartidorStatus(id, newStatus) {
+    const url = `${API_URL}repartidor_estado.php`;
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+        showNotification('Sesión expirada o no iniciada.', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                id_repartidor: id,
+                estado: newStatus
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showNotification(data.message, 'success');
+            // Opcional: Re-renderizar la vista de repartidores o solo el botón
+            if (window.location.hash === '#repartidores') {
+                 // Esto forzará una recarga de datos si es necesario
+            }
+        } else {
+            showNotification(data.message || 'Error al actualizar estado del repartidor.', 'error');
+        }
+    } catch (error) {
+        console.error('Error al cambiar el estado del repartidor:', error);
+        showNotification('Error de conexión al intentar cambiar el estado.', 'error');
+    }
+}
+// ...
+
     // --- FUNCIONES DE API GENÉRICAS ---
     async function apiRequest(endpoint, method = 'GET', data = null, id = null) {
         try {
@@ -1056,4 +1102,5 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     checkSession();
+
 });
